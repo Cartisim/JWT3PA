@@ -15,10 +15,9 @@ public class JWT3PAUserRoutes<T> where T: JWT3PAUser {
         }
     }
 
-    func appleRegister(req: Request) throws -> EventLoopFuture<String> {
-        return req.jwt.apple.verify().flatMap { (token: AppleIdentityToken) in
-            T.createUserAndToken(req: req, email: token.email, vendor: .apple, subject: token.subject)
-        }
+ func appleRegister(req: Request) throws -> EventLoopFuture<String> {
+          let token = try req.content.decode(AppleIdentityToken.self)
+           return T.createUserAndToken(req: req, email: token.email, vendor: .apple, subject: token.subject)
     }
 
     func googleRegister(req: Request) throws -> EventLoopFuture<String> {
